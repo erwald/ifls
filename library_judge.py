@@ -1,0 +1,107 @@
+import sys
+import os
+import glob
+from fastai.vision import *
+import argparse
+import json
+import numpy as np
+
+# Parse arguments.
+parser = argparse.ArgumentParser()
+parser.add_argument('-d', '--dry-run', action='store_true',
+                    help='runs drily, iow without actually (re)moving any images')
+parser.add_argument('-v', '--verbose', action='store_true',
+                    help='runs verbosely')
+args = parser.parse_args()
+
+# Set up model for classifying.
+tfms = get_transforms(max_rotate=None, max_zoom=1.,
+                      max_lighting=None, max_warp=None)
+data = ImageDataBunch.single_from_classes(
+    './data', ['bad', 'good'], ds_tfms=tfms, size=112)
+
+learn = cnn_learner(data, models.resnet34, metrics=[
+                    error_rate, Precision(), Recall()])
+learn.load('model')
+
+# Get paths of all prospective images.
+images = glob.glob('./library/*/*.jpg')
+
+RUN_DRILY = args.dry_run
+
+candidates_file_path = 'candidates.csv'
+if os.path.isfile(candidates_file_path):
+    candidates = np.genfromtxt(candidates_file_path, delimiter=',')
+else:
+    candidates = np.array([])
+
+print(f"Loaded candidates: {candidates}")
+
+# For each image, predict if it's good or bad.
+for image_path in images:
+    # Get image metadata.
+    user_dir = os.path.dirname(image_path)
+    user = os.path.split(user_dir)[-1]
+    metadata_file_path = f"{user_dir}/{user}.json"
+    if os.path.isfile(metadata_file_path):
+        with open(metadata_file_path) as f:
+            d = json.load(f)
+            graph_images = d['GraphImages']
+            image_name = os.path.split(image_path)[-1]
+            image_metadata_matches = [
+                g for g in graph_images if image_name in g['display_url']]
+    else:
+        print(f"Couldn't find metadata file at {metadata_file_path}!")
+
+    # Check if image should be discarded based on its description.
+    if image_metadata_matches:
+        image_metadata = image_metadata_matches[0]
+        edges = image_metadata['edge_media_to_caption']['edges']
+        if edges:
+            caption = edges[0]['node']['text']
+            if 'link in' in caption or 'buy' in caption or 'limited' in caption:
+                if args.verbose:
+                    print(
+                        f"Ignored photo {image_path} because of suspected ad.")
+
+                continue
+            elif ': @' in caption or 'by @' in caption or '📸 @' in caption or '📷 @' in caption:
+                if args.verbose:
+                    print(
+                        f"Ignored photo {image_path} because of suspected repost.")
+
+                continue
+
+    # Load image and make prediction.
+    img = open_image(image_path)
+    pred = learn.predict(img)
+
+    # If it's good, move it to the candidates folder.
+    score = pred[2][1]
+    if score > 0.5:
+        print(f"{image_path} is good! (score {score})")
+
+        if not RUN_DRILY:
+            filename = os.path.split(image_path)[-1]
+            new_path = os.path.join('./candidates', filename)
+            os.rename(image_path, new_path)
+
+        # Also, save a record of file path, user name, score and was_posted.
+        candidates = np.append(
+            candidates, [image_path, user, score, False], axis=0)
+
+    # Otherwise, delete it.
+    else:
+        if not RUN_DRILY:
+            os.remove(image_path)
+
+# Clean up remaining files and folders.
+for file in glob.glob('./library/*/*'):
+    os.remove(file)
+
+for folder in glob.glob('./library/*'):
+    os.rmdir(folder)
+
+# Store candidates data to csv file.
+if not RUN_DRILY:
+    candidates.tofile(candidates_file_path, sep=',')
