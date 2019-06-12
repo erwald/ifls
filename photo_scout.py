@@ -35,7 +35,7 @@ with smart_run(session):
     global download_count
     download_count = 0
 
-    while (download_count + len(existing_users)) < 2:
+    while (download_count + len(existing_users)) < 10:
         random_follower = followers.pop()
         num_followers = len(session.grab_followers(
             username=random_follower, amount=1000, live_match=False, store_locally=False))
