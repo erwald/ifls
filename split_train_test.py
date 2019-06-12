@@ -3,13 +3,18 @@ import os
 import glob
 from sklearn.model_selection import train_test_split
 
+dirs = ['images', 'data',
+        'data/train', 'data/train/good', 'data/train/bad',
+        'data/valid', 'data/valid/good', 'data/valid/bad']
+[os.makedirs(d) for d in dirs if not os.path.exists(d)]
+
 # Takes all the data we've labelled thus far, splits it into a train and a
 # validation set, and moves it into the appropriate folders.
 
 good_images = glob.glob('./data/good/*.jpg')
 bad_images = glob.glob('./data/bad/*.jpg')
 
-valid_size = 0.15
+valid_size = .15
 good_train, good_valid = train_test_split(good_images, test_size=valid_size)
 bad_train, bad_valid = train_test_split(bad_images, test_size=valid_size)
 

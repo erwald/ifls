@@ -5,6 +5,9 @@ from PIL import ImageTk, Image
 import sys
 import os
 
+dirs = ['images', 'data']
+[os.makedirs(d) for d in dirs if not os.path.exists(d)]
+
 images = glob.glob('./images/*/*.jpg')
 stop = False
 

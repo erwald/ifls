@@ -109,8 +109,11 @@ venv.bak/
 
 *.log
 config.yml
-data/
+data/*
+!data/models
+data/models/*
+!data/models/model.pth
 images/
 library/
 candidates/
-candidates.csv
+candidates.yml

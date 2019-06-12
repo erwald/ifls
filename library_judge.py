@@ -4,7 +4,10 @@ import glob
 from fastai.vision import *
 import argparse
 import json
-import numpy as np
+import yaml
+
+dirs = ['data', 'library', 'candidates']
+[os.makedirs(d) for d in dirs if not os.path.exists(d)]
 
 # Parse arguments.
 parser = argparse.ArgumentParser()
@@ -20,8 +23,7 @@ tfms = get_transforms(max_rotate=None, max_zoom=1.,
 data = ImageDataBunch.single_from_classes(
     './data', ['bad', 'good'], ds_tfms=tfms, size=112)
 
-learn = cnn_learner(data, models.resnet34, metrics=[
-                    error_rate, Precision(), Recall()])
+learn = cnn_learner(data, models.resnet50, metrics=[error_rate])
 learn.load('model')
 
 # Get paths of all prospective images.
@@ -29,13 +31,13 @@ images = glob.glob('./library/*/*.jpg')
 
 RUN_DRILY = args.dry_run
 
-candidates_file_path = 'candidates.csv'
+candidates_file_path = 'candidates.yml'
 if os.path.isfile(candidates_file_path):
-    candidates = np.genfromtxt(candidates_file_path, delimiter=',')
-else:
-    candidates = np.array([])
+    candidates = yaml.load(open(candidates_file_path))
 
-print(f"Loaded candidates: {candidates}")
+    print(f"Loaded candidates: {candidates}")
+else:
+    candidates = []
 
 # For each image, predict if it's good or bad.
 for image_path in images:
@@ -78,17 +80,17 @@ for image_path in images:
 
     # If it's good, move it to the candidates folder.
     score = pred[2][1]
-    if score > 0.5:
+    if score > .5:
         print(f"{image_path} is good! (score {score})")
 
+        filename = os.path.split(image_path)[-1]
+
         if not RUN_DRILY:
-            filename = os.path.split(image_path)[-1]
             new_path = os.path.join('./candidates', filename)
             os.rename(image_path, new_path)
 
         # Also, save a record of file path, user name, score and was_posted.
-        candidates = np.append(
-            candidates, [image_path, user, score, False], axis=0)
+        candidates.append([filename, user, score.item(), False])
 
     # Otherwise, delete it.
     else:
@@ -96,12 +98,13 @@ for image_path in images:
             os.remove(image_path)
 
 # Clean up remaining files and folders.
-for file in glob.glob('./library/*/*'):
-    os.remove(file)
+if not RUN_DRILY:
+    for file in glob.glob('./library/*/*'):
+        os.remove(file)
 
-for folder in glob.glob('./library/*'):
-    os.rmdir(folder)
+    for folder in glob.glob('./library/*'):
+        os.rmdir(folder)
 
 # Store candidates data to csv file.
 if not RUN_DRILY:
-    candidates.tofile(candidates_file_path, sep=',')
+    yaml.dump(candidates, open(candidates_file_path, 'w'))
