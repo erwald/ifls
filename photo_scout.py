@@ -1,4 +1,4 @@
-from instapy import InstaPy, smart_run
+from InstagramAPI import InstagramAPI
 import random
 import os
 import glob
@@ -11,40 +11,55 @@ conf = yaml.load(open('config.yml'))
 insta_username = conf['instagram']['user']
 insta_password = conf['instagram']['password']
 
-session = InstaPy(username=insta_username,
-                  password=insta_password,
-                  headless_browser=True,
-                  use_firefox=True)
+# Log in.
+instagram_api = InstagramAPI(insta_username, insta_password)
+instagram_api.login()
+
+
+def get_latest_public_followers(username):
+    '''Gets the first page of followers for the given user name, filtering out
+    any that are private.
+    '''
+    instagram_api.searchUsername(username)
+    user_id = instagram_api.LastJson['user']['pk']
+    instagram_api.getUserFollowers(user_id)
+    return [user['username'] for user in instagram_api.LastJson['users'] if not user['is_private']]
+
+
+def get_follower_count(username):
+    '''Gets the number of followers for the given user name.
+    '''
+    instagram_api.searchUsername(username)
+    return int(instagram_api.LastJson['user']['follower_count'])
+
 
 seed_orgs = ['der_greif', 'brownieartphoto', 'lagosphotofestival',
              'latinamericanfotografia', 'aklphotofestival', 'mfonfoto']
 
-with smart_run(session):
+random_seed_org = random.sample(seed_orgs, 1)[0]
+followers = get_latest_public_followers(random_seed_org)
 
-    random_seed_org = random.sample(seed_orgs, 1)[0]
-    followers = session.grab_followers(
-        username=random_seed_org, amount=1000, live_match=False, store_locally=False)
+existing_users = [os.path.split(dir)[-1]
+                  for dir in glob.glob('./library/*')]
+followers = [f for f in followers if f not in existing_users]
+random.shuffle(followers)
 
-    existing_users = [os.path.split(dir)[-1]
-                      for dir in glob.glob('./library/*')]
-    followers = [f for f in followers if f not in existing_users]
-    random.shuffle(followers)
+print(f"Fetched {len(followers)} followers from {random_seed_org}")
 
-    print(f"Fetched {len(followers)} followers from {random_seed_org}")
+global download_count
+download_count = 0
 
-    global download_count
-    download_count = 0
+while (download_count + len(existing_users)) < 20:
+    random_follower = followers.pop()
+    num_followers = get_follower_count(random_follower)
 
-    while (download_count + len(existing_users)) < 10:
-        random_follower = followers.pop()
-        num_followers = len(session.grab_followers(
-            username=random_follower, amount=1000, live_match=False, store_locally=False))
+    if num_followers > 1000 or num_followers < 20:
+        print(f"{random_follower} had {num_followers} followers; skipping")
+    elif random_follower == 'institute_for_luminal_studies':
+        print('oops')
+    else:
+        print(f"Downloading photos of {random_follower}")
+        shell_cmd = f"instagram-scraper --media-types=image --profile-metadata --include-location --comments --retry-forever --destination=library --retain-username --maximum=100 {random_follower}"
+        os.system(shell_cmd)
 
-        if num_followers > 1000 or num_followers < 20:
-            print(f"{random_follower} had {num_followers} followers; skipping")
-        else:
-            print(f"Downloading photos of {random_follower}")
-            shell_cmd = f"instagram-scraper --media-types=image --profile-metadata --include-location --comments --retry-forever --destination=library --retain-username --maximum=100 {random_follower}"
-            os.system(shell_cmd)
-
-            download_count += 1
+        download_count += 1
