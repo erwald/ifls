@@ -28,7 +28,7 @@ candidates_file_path = 'candidates.yml'
 if os.path.isfile(candidates_file_path):
     candidates = yaml.load(open(candidates_file_path))
 
-    print(f"Loaded candidates: {candidates}")
+    print(f"Loaded {len(candidates)} candidates")
 else:
     print("Couldn't find any candidate photos ...")
 
@@ -45,9 +45,7 @@ antecedent = random.sample(
 caption = f"{antecedent}: @{user}"
 photo_path = f"./candidates/{photo_filename}"
 
-print(photo_filename)
-print(photo_path)
-print(caption)
+print(f"Selected {photo_path} with caption: {caption}")
 
 if not args.dry_run:
     # Remove EXIF data.
