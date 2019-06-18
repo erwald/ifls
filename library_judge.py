@@ -37,7 +37,7 @@ candidates_file_path = 'candidates.yml'
 if os.path.isfile(candidates_file_path):
     candidates = yaml.load(open(candidates_file_path))
 
-    print(f"Loaded candidates: {candidates}")
+    print(f"Loaded {len(candidates)} candidates")
 else:
     candidates = []
 
