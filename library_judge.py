@@ -1,3 +1,5 @@
+#!/bin/zsh
+
 import sys
 import os
 import glob

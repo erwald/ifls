@@ -1,3 +1,5 @@
+#!/bin/zsh
+
 from InstagramAPI import InstagramAPI
 from PIL import Image
 import random

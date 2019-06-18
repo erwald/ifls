@@ -1,3 +1,5 @@
+#!/bin/zsh
+
 import glob
 import random
 import tkinter

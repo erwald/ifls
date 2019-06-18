@@ -1,3 +1,5 @@
+#!/bin/zsh
+
 from InstagramAPI import InstagramAPI
 import random
 import os
