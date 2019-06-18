@@ -80,9 +80,9 @@ for image_path in images:
     img = open_image(image_path)
     pred = learn.predict(img)
 
-    # If it's good, move it to the candidates folder.
+    # If it's good (with 95% or more confidence), move it to /candidates.
     score = pred[2][1]
-    if score > .5:
+    if score > .95:
         print(f"{image_path} is good! (score {score})")
 
         filename = os.path.split(image_path)[-1]
