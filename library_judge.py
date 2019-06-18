@@ -35,7 +35,7 @@ RUN_DRILY = args.dry_run
 
 candidates_file_path = 'candidates.yml'
 if os.path.isfile(candidates_file_path):
-    candidates = yaml.load(open(candidates_file_path))
+    candidates = yaml.load(open(candidates_file_path), Loader=yaml.FullLoader)
 
     print(f"Loaded {len(candidates)} candidates")
 else:

@@ -9,7 +9,7 @@ import yaml
 dirs = ['library']
 [os.makedirs(d) for d in dirs if not os.path.exists(d)]
 
-conf = yaml.load(open('config.yml'))
+conf = yaml.load(open('config.yml'), Loader=yaml.FullLoader)
 insta_username = conf['instagram']['user']
 insta_password = conf['instagram']['password']
 
@@ -51,7 +51,7 @@ print(f"Fetched {len(followers)} followers from {random_seed_org}")
 # Load candidates file.
 candidates_file_path = 'candidates.yml'
 if os.path.isfile(candidates_file_path):
-    candidates = yaml.load(open(candidates_file_path))
+    candidates = yaml.load(open(candidates_file_path), Loader=yaml.FullLoader)
 else:
     candidates = []
 

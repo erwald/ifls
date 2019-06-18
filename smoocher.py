@@ -4,7 +4,7 @@ from instapy import InstaPy
 from instapy import smart_run
 import yaml
 
-conf = yaml.load(open('config.yml'))
+conf = yaml.load(open('config.yml'), Loader=yaml.FullLoader)
 insta_username = conf['instagram']['user']
 insta_password = conf['instagram']['password']
 

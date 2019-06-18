@@ -16,7 +16,7 @@ parser.add_argument('-d', '--dry-run', action='store_true',
                     help='runs drily, iow without actually posting any images')
 args = parser.parse_args()
 
-conf = yaml.load(open('config.yml'))
+conf = yaml.load(open('config.yml'), Loader=yaml.FullLoader)
 insta_username = conf['instagram']['user']
 insta_password = conf['instagram']['password']
 
@@ -28,7 +28,7 @@ if not args.dry_run:
 # Load candidates file.
 candidates_file_path = 'candidates.yml'
 if os.path.isfile(candidates_file_path):
-    candidates = yaml.load(open(candidates_file_path))
+    candidates = yaml.load(open(candidates_file_path), Loader=yaml.FullLoader)
 
     print(f"Loaded {len(candidates)} candidates")
 else:
