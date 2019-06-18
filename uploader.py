@@ -47,7 +47,7 @@ antecedent = random.sample(
 caption = f"{antecedent}: @{user}"
 photo_path = f"./candidates/{photo_filename}"
 
-print(f"Selected {photo_path} with caption: {caption}")
+print(f"Selected {photo_path} (score {candidate[2]}) with caption: {caption}")
 
 if not args.dry_run:
     # Remove EXIF data.
