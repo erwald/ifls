@@ -99,6 +99,10 @@ for image_path in images:
         if not RUN_DRILY:
             os.remove(image_path)
 
+# Store candidates data to csv file.
+if not RUN_DRILY:
+    yaml.dump(candidates, open(candidates_file_path, 'w'))
+
 # Clean up remaining files and folders.
 if not RUN_DRILY:
     for file in glob.glob('./library/*/*'):
@@ -106,7 +110,3 @@ if not RUN_DRILY:
 
     for folder in glob.glob('./library/*'):
         os.rmdir(folder)
-
-# Store candidates data to csv file.
-if not RUN_DRILY:
-    yaml.dump(candidates, open(candidates_file_path, 'w'))
