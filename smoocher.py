@@ -34,21 +34,26 @@ with smart_run(session):
                                     max_followers=5000,
                                     min_followers=50,
                                     min_following=100)
-    session.set_dont_unfollow_active_users(enabled=True, posts=20)
+    # session.set_dont_unfollow_active_users(enabled=True, posts=20)
 
     users = ['der_greif', 'brownieartphoto', 'lagosphotofestival',
              'latinamericanfotografia', 'aklphotofestival', 'mfonfoto']
     session.set_user_interact(amount=4, randomize=True,
                               percentage=50, media='Photo')
-    session.follow_user_followers(
-        users, amount=9, randomize=True, interact=True)
+    emojis = ['🔥', '🙌', '👏', '💦', '💥', '💫', '✨', '☄️', '💎', '👌', '💯']
+    session.set_comments([emoji * 3 for emoji in emojis])
+    session.set_do_comment(True, percentage=20)
+    session.set_do_like(True, percentage=70)
+    session.set_do_follow(True, percentage=100)
+    session.interact_user_followers(users, amount=10, randomize=True)
 
-    tags = ['humbleweekendz', 'humbleweekdayz']
-    session.like_by_tags(tags, amount=19)
-    session.follow_by_tags(tags, amount=7, randomize=True, interact=True)
+    tags = ['humbleweekendz', 'humbleweekdayz', 'art',
+            'photography', 'vsco', 'follow4follow', 'f4f']
+    session.like_by_tags(tags, amount=6)
+    session.follow_by_tags(tags, amount=4, randomize=True, interact=True)
 
-    session.unfollow_users(amount=49, InstapyFollowed=(
-        True, 'nonfollowers'), style='FIFO', unfollow_after=200*60*60, sleep_delay=501)
+    session.unfollow_users(amount=68, InstapyFollowed=(
+        True, 'nonfollowers'), style='FIFO', unfollow_after=150*60*60, sleep_delay=501)
 
     session.like_by_feed(amount=14, randomize=True,
                          unfollow=False, interact=True)
