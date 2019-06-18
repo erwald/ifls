@@ -48,6 +48,15 @@ random.shuffle(followers)
 
 print(f"Fetched {len(followers)} followers from {random_seed_org}")
 
+# Load candidates file.
+candidates_file_path = 'candidates.yml'
+if os.path.isfile(candidates_file_path):
+    candidates = yaml.load(open(candidates_file_path))
+else:
+    candidates = []
+
+users_with_post = set([c[1] for c in candidates if c[3]])
+
 global download_count
 download_count = 0
 
@@ -57,8 +66,10 @@ while (download_count + len(existing_users)) < 20:
 
     if num_followers > 1000 or num_followers < 20:
         print(f"{random_follower} had {num_followers} followers; skipping")
+    elif random_follower in users_with_post:
+        print(f"{random_follower} has already been scouted; skipping")
     elif random_follower == 'institute_for_luminal_studies':
-        print('oops')
+        print('oops; skipping')
     else:
         print(f"Downloading photos of {random_follower}")
         shell_cmd = f"instagram-scraper --media-types=image --profile-metadata --include-location --comments --retry-forever --destination=library --retain-username --maximum=100 {random_follower}"
