@@ -72,7 +72,7 @@ while (download_count + len(existing_users)) < 20:
         print('oops; skipping')
     else:
         print(f"Downloading photos of {random_follower}")
-        shell_cmd = f"instagram-scraper --media-types=image --profile-metadata --include-location --comments --retry-forever --destination=library --retain-username --maximum=100 {random_follower}"
+        shell_cmd = f"/usr/local/bin/instagram-scraper --media-types=image --profile-metadata --include-location --comments --retry-forever --destination=library --retain-username --maximum=100 {random_follower}"
         os.system(shell_cmd)
 
         download_count += 1
