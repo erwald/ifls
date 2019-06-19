@@ -40,7 +40,8 @@ with smart_run(session):
              'latinamericanfotografia', 'aklphotofestival', 'mfonfoto']
     session.set_user_interact(amount=4, randomize=True,
                               percentage=50, media='Photo')
-    emojis = ['🔥', '🙌', '👏', '💦', '💥', '💫', '✨', '☄️', '💎', '👌', '💯']
+    emojis = [':fire:', ':raised_hands:', ':clap:', ':sweat_drops:',
+              ':boom:', ':dizzy:', ':sparkles:', ':gem:', ':ok_hand:', ':100:']
     session.set_comments([emoji * 3 for emoji in emojis])
     session.set_do_comment(True, percentage=20)
     session.set_do_like(True, percentage=70)
