@@ -63,13 +63,13 @@ for image_path in images:
         edges = image_metadata['edge_media_to_caption']['edges']
         if edges:
             caption = edges[0]['node']['text']
-            if 'link in' in caption or 'buy' in caption or 'limited' in caption:
+            if any(x in caption for x in ['link in', 'buy', 'limited', '$', '€', '£']):
                 if args.verbose:
                     print(
                         f"Ignored photo {image_path} because of suspected ad.")
 
                 continue
-            elif ': @' in caption or 'by @' in caption or '📸 @' in caption or '📷 @' in caption:
+            elif any(x in caption for x in [': @', 'by @', '📸 @', '📷 @']):
                 if args.verbose:
                     print(
                         f"Ignored photo {image_path} because of suspected repost.")
