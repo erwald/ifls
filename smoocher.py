@@ -34,7 +34,7 @@ with smart_run(session):
                                     max_followers=5000,
                                     min_followers=50,
                                     min_following=100)
-    # session.set_dont_unfollow_active_users(enabled=True, posts=20)
+    session.set_dont_unfollow_active_users(enabled=True, posts=10)
 
     users = ['der_greif', 'brownieartphoto', 'lagosphotofestival',
              'latinamericanfotografia', 'aklphotofestival', 'mfonfoto']
