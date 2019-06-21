@@ -54,7 +54,7 @@ with smart_run(session):
     session.follow_by_tags(tags, amount=4, randomize=True, interact=True)
 
     session.unfollow_users(amount=153, InstapyFollowed=(
-        True, 'nonfollowers'), style='FIFO', unfollow_after=150*60*60, sleep_delay=501)
+        True, 'nonfollowers'), style='FIFO', unfollow_after=120*60*60, sleep_delay=501)
 
     session.like_by_feed(amount=14, randomize=True,
                          unfollow=False, interact=True)
