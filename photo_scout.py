@@ -35,7 +35,7 @@ def get_follower_count(username):
     return int(instagram_api.LastJson['user']['follower_count'])
 
 
-seed_orgs = ['der_greif', 'brownieartphoto', 'lagosphotofestival',
+seed_orgs = ['der_greif', 'brownieartphoto', 'lagosphotofestival', 'sharjahart',
              'latinamericanfotografia', 'aklphotofestival', 'mfonfoto']
 
 random_seed_org = random.sample(seed_orgs, 1)[0]
