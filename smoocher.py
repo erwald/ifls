@@ -40,9 +40,9 @@ with smart_run(session):
              'latinamericanfotografia', 'aklphotofestival', 'mfonfoto']
     session.set_user_interact(amount=4, randomize=True,
                               percentage=50, media='Photo')
-    emojis = [':fire:', ':raised_hands:', ':clap:', ':sweat_drops:',
-              ':boom:', ':dizzy:', ':sparkles:', ':gem:', ':ok_hand:', ':100:']
-    session.set_comments([f"{emoji * 3} " for emoji in emojis])
+    emojis = [':fire:', ':raised_hands:', ':clap:', ':boom:',
+              ':dizzy:', ':sparkles:', ':gem:', ':ok_hand:', ':100:']
+    session.set_comments([f"emoji" for emoji in emojis])
     session.set_do_comment(True, percentage=20)
     session.set_do_like(True, percentage=70)
     session.set_do_follow(True, percentage=100)
@@ -53,8 +53,8 @@ with smart_run(session):
     session.like_by_tags(tags, amount=6)
     session.follow_by_tags(tags, amount=4, randomize=True, interact=True)
 
-    session.unfollow_users(amount=153, InstapyFollowed=(
-        True, 'nonfollowers'), style='FIFO', unfollow_after=100*60*60, sleep_delay=501)
+    session.unfollow_users(amount=194, InstapyFollowed=(
+        True, 'nonfollowers'), style='FIFO', unfollow_after=72*60*60, sleep_delay=501)
 
     session.like_by_feed(amount=14, randomize=True,
                          unfollow=False, interact=True)
