@@ -63,7 +63,8 @@ for image_path in images:
         edges = image_metadata['edge_media_to_caption']['edges']
         if edges:
             caption = edges[0]['node']['text']
-            if any(x in caption for x in ['link in', 'buy', 'limited', '$', '€', '£']):
+            if any(x in caption for x in ['link in', 'buy', 'limited', 'offer',
+                                          'available', 'gift', '$', '€', '£']):
                 if args.verbose:
                     print(
                         f"Ignored photo {image_path} because of suspected ad.")
