@@ -70,7 +70,7 @@ for image_path in images:
                         f"Ignored photo {image_path} because of suspected ad.")
 
                 continue
-            elif any(x in caption for x in [': @', 'by @', '📸 @', '📷 @']):
+            elif any(x in caption for x in [': @', '©', 'by:', 'by @', '📸 @', '📷 @']):
                 if args.verbose:
                     print(
                         f"Ignored photo {image_path} because of suspected repost.")
