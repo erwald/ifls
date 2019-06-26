@@ -38,19 +38,19 @@ with smart_run(session):
 
     users = ['der_greif', 'brownieartphoto', 'lagosphotofestival', 'sharjahart',
              'latinamericanfotografia', 'aklphotofestival', 'mfonfoto']
-    session.set_user_interact(amount=4, randomize=True,
+    session.set_user_interact(amount=9, randomize=True,
                               percentage=50, media='Photo')
     session.set_do_like(True, percentage=70)
     session.set_do_follow(True, percentage=100)
-    session.interact_user_followers(users, amount=10, randomize=True)
+    session.interact_user_followers(users, amount=13, randomize=True)
 
     tags = ['humbleweekendz', 'humbleweekdayz', 'art',
             'photography', 'vsco', 'follow4follow', 'f4f']
-    session.like_by_tags(tags, amount=6)
-    session.follow_by_tags(tags, amount=4, randomize=True, interact=True)
+    session.like_by_tags(tags, amount=8)
+    session.follow_by_tags(tags, amount=6, randomize=True, interact=True)
 
-    session.unfollow_users(amount=194, InstapyFollowed=(
-        True, 'nonfollowers'), style='FIFO', unfollow_after=72*60*60, sleep_delay=501)
+    session.unfollow_users(amount=200, InstapyFollowed=(
+        True, 'nonfollowers'), style='FIFO', unfollow_after=48*60*60, sleep_delay=501)
 
-    session.like_by_feed(amount=14, randomize=True,
+    session.like_by_feed(amount=42, randomize=True,
                          unfollow=False, interact=True)
