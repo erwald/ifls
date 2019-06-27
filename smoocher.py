@@ -44,10 +44,14 @@ with smart_run(session):
     session.set_do_follow(True, percentage=100)
     session.interact_user_followers(users, amount=13, randomize=True)
 
-    tags = ['humbleweekendz', 'humbleweekdayz', 'art',
-            'photography', 'vsco', 'follow4follow', 'f4f']
-    session.like_by_tags(tags, amount=8)
-    session.follow_by_tags(tags, amount=6, randomize=True, interact=True)
+    tags = ['humbleweekendz', 'humbleweekdayz', 'art', 'photography', 'vsco',
+            'follow4follow', 'f4f', 'followback', 'film', 'analog', 'analogue',
+            'mediumformat', 'lensculture', 'portrait', 'portraits', 'dazed',
+            'crack', 'id', 'dazedandconfused', 'dazedmagazine', 'idmagazine',
+            'filmsnotdead', 'filmisnotdead', 'heyfsc', 'thefilmcommunity',
+            'hasselblad', 'kodak', 'ishootfilm', 'filmphotography', 'shootfilm']
+    session.like_by_tags(tags, amount=21)
+    session.follow_by_tags(tags, amount=12, randomize=True, interact=True)
 
     session.unfollow_users(amount=200, InstapyFollowed=(
         True, 'nonfollowers'), style='FIFO', unfollow_after=48*60*60, sleep_delay=501)
